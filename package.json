@@ -1,0 +1,25 @@
+{
+  "name": "djreactecommerce",
+  "version": "1.0.0",
+  "description": "A simple ecommerce site buit with django and react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/andy1729/django-react-ecommerce.git"
+  },
+  "keywords": [
+    "django",
+    "react",
+    "ecommerce",
+    "django-rest-framework"
+  ],
+  "author": "Ujjawal Anand",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andy1729/django-react-ecommerce/issues"
+  },
+  "homepage": "https://github.com/andy1729/django-react-ecommerce#readme"
+}
