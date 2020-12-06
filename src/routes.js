@@ -6,12 +6,12 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import HomepageLayout from "./containers/Home";
 
-const BaseRouter = () => {
-    <Hoc>
-        <Route path="/login" component={Login} />
-        <Route path="signup" component={Signup} />
-        <Route exact path="/" component={HomepageLayout} />
-    </Hoc>
-}
+const BaseRouter = () => (
+  <Hoc>
+    <Route path="/login" component={Login} />
+    <Route path="/signup" component={Signup} />
+    <Route exact path="/" component={HomepageLayout} />
+  </Hoc>
+);
 
 export default BaseRouter;
