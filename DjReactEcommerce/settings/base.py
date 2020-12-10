@@ -22,6 +22,10 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'rest_framework',
     'rest_framework.authtoken',
+
+    'django_apps.core',
+    'django_apps.cart',
+    'django_apps.staff'
 ]
 
 MIDDLEWARE = [
