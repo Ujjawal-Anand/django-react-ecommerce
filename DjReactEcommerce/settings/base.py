@@ -24,8 +24,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'django_apps.core',
-    'django_apps.cart',
-    'django_apps.staff'
 ]
 
 MIDDLEWARE = [

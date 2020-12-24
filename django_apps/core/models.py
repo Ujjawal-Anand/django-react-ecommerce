@@ -212,7 +212,3 @@ def userprfile_receiver(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(userprfile_receiver, sender=User)
-
-
-
-
