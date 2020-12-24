@@ -187,7 +187,7 @@ class AddressListView(APIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = AddressSerializer
 
-    def def get_queryset(self):
+    def get_queryset(self):
         address_type = slf.request.query_params.get('address_type', None)
         qs = Address.objects.all()
         if address_type is None:
@@ -217,7 +217,7 @@ class PaymentListView(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = PaymentSerializer
 
-    def def get_queryset(self):
+    def get_queryset(self):
         return Payment.objects.filter(user=self.request.user)
     
         
