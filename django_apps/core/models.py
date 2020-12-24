@@ -135,7 +135,7 @@ class Order(models.Model):
         blank=True, null=True
     )
     coupon = models.ForeignKey(
-        'coupon', on_delete=models.SET_NULL,
+        'Coupon', on_delete=models.SET_NULL,
         blank=True, null=True
     )
     being_delivered = models.BooleanField(default=False)
@@ -176,7 +176,7 @@ class Address(models.Model):
         return self.user.username
 
 
-class coupon(models.Model):
+class Coupon(models.Model):
     code = models.CharField(max_length=15)
     amount = models.FloatField()
 
