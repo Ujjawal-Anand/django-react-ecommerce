@@ -69,7 +69,7 @@ class ItemVariationAdmin(admin.ModelAdmin):
     search_fields = ['value']
 
 
-class ItemVariationInLineAdmin(admin.ModelAdmin):
+class ItemVariationInLineAdmin(admin.TabularInline):
     model = ItemVariation
     extra = 1
 

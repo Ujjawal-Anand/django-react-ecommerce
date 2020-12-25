@@ -3,4 +3,4 @@ const apiURL = "/api";
 
 const endpoint = `${loacalhost}${apiURL}`;
 
-export const productListURL = `${endpoint}/product-list/`;
+export const productListURL = `${endpoint}/products/`;

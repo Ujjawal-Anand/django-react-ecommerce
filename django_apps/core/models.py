@@ -12,7 +12,8 @@ User = get_user_model()
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
     ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
+    ('OW', 'Outwear'),
+    ('BO', "Book"),
 )
 
 LABEL_CHOICES = (
@@ -140,6 +141,7 @@ class Order(models.Model):
     )
     being_delivered = models.BooleanField(default=False)
     received = models.BooleanField(default=False)
+    refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
 
     '''
