@@ -4,3 +4,5 @@ const apiURL = "/api";
 const endpoint = `${loacalhost}${apiURL}`;
 
 export const productListURL = `${endpoint}/products/`;
+export const productDetailURL = id => `${endpoint}/products/${id}/`;
+export const addToCartURL = `${endpoint}/add-to-cart/`;
