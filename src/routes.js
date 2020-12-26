@@ -5,13 +5,15 @@ import Hoc from "./hoc/hoc";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import HomepageLayout from "./containers/Home";
-import ProductList from './containers/ProductList'
+import ProductList from './containers/ProductList';
+import ProductDetail from './containers/ProductDetail';
 
 const BaseRouter = () => (
   <Hoc>
     <Route path="/login" component={Login} />
     <Route path="/signup" component={Signup} />
-    <Route path="/products" component={ProductList} />
+    <Route exact path="/products" component={ProductList} />
+    <Route path="/products/:productID" component={ProductDetail} />
     <Route exact path="/" component={HomepageLayout} />
   </Hoc>
 );

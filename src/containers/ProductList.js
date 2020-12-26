@@ -2,7 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import { Message, Button, Loader, Segment, Container, Icon, Image, Item, Label } from 'semantic-ui-react'
 
-import { productListURL } from '../constants'
+import { productListURL, addToCartURL } from '../constants';
+import { fetchCart } from "../store/actions/cart";
+import { authAxios } from "../utils";
+import { connect } from 'react-redux';
+
 class ProductList extends React.Component {
 
     state = {
@@ -29,6 +33,19 @@ class ProductList extends React.Component {
             })
     }
 
+    handleAddToCart = slug => {
+      this.setState({ loading: true })
+      authAxios.post(addToCartURL, { slug })
+      .then(res => {
+        this.props.refereshCart();
+        this.setState({loading: false})
+      })
+      .catch(err => {
+        this.setState({error: err, loading: false})
+      });
+    };
+
+
     render() {
 const paragraph = <Image src='/images/wireframe/short-paragraph.png' />
 const { loading, data, error } = this.state;
@@ -52,23 +69,39 @@ return (
             />
         )}
   <Item.Group divided>
-    {data.map(product => {
+    {data.map(item => {
         return (
-            <Item key={product.id}>
-      <Item.Image src={product.image} />
+            <Item key={item.id}>
+      <Item.Image src={item.image} />
 
       <Item.Content>
-        <Item.Header as='a'>{product.title}</Item.Header>
+        <Item.Header 
+          as='a'
+          onClick={() => this.props.history.push(`/products/${item.id}`)}
+        >{item.title}</Item.Header>
         <Item.Meta>
-        <span className='cinema'>{product.category}</span>
+        <span className='cinema'>{item.category}</span>
         </Item.Meta>
-        <Item.Description>{product.description}</Item.Description>
+        <Item.Description>{item.description}</Item.Description>
         <Item.Extra>
-          <Button primary floated='right'>
+          {/* <Button primary floated='right'>
             Add to cart 
             <Icon name='cart plus' />
-          </Button>
-        <Label>Price: ${product.price}</Label>
+        </Button> */}
+        {item.discount_price && (
+           <Label
+              color={
+              item.label === "primary"
+               ? "blue"
+               : item.label === "secondary"
+               ? "green"
+               : "olive"
+              }
+            >
+              {item.label}
+            </Label>
+        )}
+        <Label>Price: ${item.price}</Label>
         </Item.Extra>
       </Item.Content>
     </Item>
@@ -80,4 +113,13 @@ return (
     }
 }
 
-export default ProductList
+const mapDispatchToProps = dispatch => {
+  return {
+    refreshCart: () => dispatch(fetchCart())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+  )(ProductList);
