@@ -463,8 +463,26 @@ class Profile extends React.Component {
                             />
                         </menu>
                     </Grid.Column>
+                    <Grid.Column width={10}>
+                        <Header>{this.handleGetActiveItem()}</Header>
+                        <Divider />
+                        {activeItem === "paymentHistory" ? (
+                            <PaymentHistory />
+                        ) : (
+                            this.renderAddresses()
+                        )}
+                    </Grid.Column>
                 </Grid.Row>
             </Grid>
-        )
+        );
     }
 }
+
+
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.token != null
+    };
+};
+
+export default connect(mapStateToProps)(Profile)
