@@ -25,7 +25,8 @@ import {
       addressCreateURL,
       addressUpdateURL,
       userIDURL,
-      paymentListURL
+      paymentListURL,
+      addressDeleteURL
   } from "../constants";
 import { authAxios } from "../utils";
 
@@ -251,6 +252,219 @@ class AddressForm extends React.Component {
                 </Form.Button>
             </Form>
 
+        );
+    }
+}
+
+class Profile extends React.Component {
+    state = {
+        activeItem: "billingAddress",
+        addresses: [],
+        coutries: [],
+        userID: null,
+        selectedAddress: null
+    };
+
+    componentDidMount() {
+        this.handleFetchAddresses();
+        this.handleFetchCoutries();
+        this.handleFetchUserID();
+    };
+
+    handleItemclick = name => {
+        this.setState({ activeItem: name}, () => {
+            this.handleFetchAddresses();
+        });
+    };
+
+    handleGetActiveItem = () => {
+        const { activeItem } = this.state;
+        if (activeItem === "billingAddress") {
+            return "Billing Address";
+        } else if (activeItem === "shippingAddress") {
+            return 'Shipping Address'
+        }
+        return "Payment History";
+    };
+
+    handleFormatCountries = countries => {
+        const keys = Object.keys(countries);
+        return keys.map(k => {
+            return {
+                key: k,
+                text: countries[k],
+                value: k
+            };
+        });
+    };
+
+    handleDeleteAddress = addressID => {
+        authAxios.delete(addressDeleteURL(addressID))
+                .then(res => {
+                    this.handleCallback();
+                }).catch(err => {
+                    this.setState({ error: err })
+        });
+    };
+
+    handleSelectaddress = address => {
+        this.setState({ selectedAddress: address });
+    };
+
+    handleFetchUserID = () => {
+        authAxios.get(userIDURL)
+        .then(res => {
+            this.setState({ userID: res.data.userID  })
+        }).catch(err => {
+            this.setState({ error: err });
+        });
+    };
+
+    handleFetchCoutries = () => {
+        authAxios.get(countryListURL)
+        .then(res => {
+            this.setState({ coutries: this.handleFormatCountries(res.data) });
+        }).catch(err => {
+            this.setState({ error: err})
+        });
+    };
+
+    handleFetchAddresses = () => {
+        this.setState({ loading: true });
+        const { activeItem } = this.state;
+        authAxios.get(addressListURL(ActiveItem === "billingAddress" ? "B" : "S"))
+            .then(res => {
+                this.setState({ addresses: res.data, loading: false});
+            })
+            .catch(err => {
+                this.setState({ error: err });
+            });
+    };
+
+    handleCallback = () => {
+        this.handleFetchAddressess();
+        this.setState({ selectedAddress: null })
+    };
+
+    renderAddresses = () => {
+        const {
+            activeItem,
+            addresses,
+            countries,
+            selectedAddress,
+            userID
+        } = this.state;
+
+        return (
+            <React.Fragment>
+                <Card.Group>
+                    {addresses.map(a => {
+                        return (
+                            <Card key={a.id}>
+                                <Card.Content>
+                                    {a.default && (
+                                        <lable as="a" color="blue" ribbion="right">
+                                            Default
+                                        </lable>
+                                    )}
+                                    <Card.Header>
+                                        {a.street_address}, {a.apartment_address}
+                                    </Card.Header>
+                                    <Card.Content extra>
+                                        <Button
+                                            color="yellow"
+                                            onClick={() => this.handleDeleteAddress(a.id)}
+                                            >
+                                                Update
+                                            </Button>
+                                            <Button
+                                             color="red"
+                                             onClick={() => this.handleDeleteAddress(a.id)}
+                                             >
+                                                 Delete
+                                             </Button>
+                                    </Card.Content>
+                                </Card.Content>
+                            </Card>
+                        )
+                    })}
+                </Card.Group>
+                {addresses.length > 0 ? <Divider /> : null}
+                {selectedAddress === null ? (
+                    <AddressForm
+                        activeItem={activeItem}
+                        countries={countries}
+                        formType={CREATE_FORM}
+                        userID={userID}
+                        callback={this.handleCallback}
+                    />
+                ): null}
+                {selectedAddress && (
+                    <AddressForm
+                        activeItem={activeItem}
+                        userID={userID}
+                        countries={countries}
+                        address={selectedAddress}
+                        formType={UPDATE_FROM}
+                        callback={this.handleCallback}
+                    />
+                )}
+            </React.Fragment>
+        );
+    };
+
+    render() {
+        const { activeItem, error, loading } = this.state;
+        const { isAuthenticated } = this.props;
+
+        if (!isAuthenticated) {
+            return <Redirect to="/login" />;
+        }
+
+        return (
+            <Grid container columns={2} divided>
+                <Grid.Row columns={1}>
+                    <Grid.Coloumn>
+                        {error && (
+                            <Message
+                                error
+                                header="There was an error"
+                                content={JSON.stringify(error)}
+                            />
+                        )}
+                        {loading && (
+                            <Segment>
+                                <Dimmer active inverted>
+                                    <Loader inverted>Loading</Loader>
+                                </Dimmer>
+                                <Image src="/images/wireframe/short-paragraph.png" />
+                            </Segment>
+                        )}
+                    </Grid.Coloumn>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width={6}>
+                        <menu pointing vertical fluid>
+                            <Menu.Item
+                                name="Billing Address"
+                                active={activeItem === "billingAddress"}
+                                onclick={()=> this.handleItemclick("billingAddress")}
+                            />
+
+                            <Menu.Item
+                                name="Shipping Address"
+                                active={activeItem === "shippingAddress"}
+                                onclick={()=> this.handleItemclick("shippingAddress")}
+                            />
+                            <Menu.Item
+                                name="Payment Address"
+                                active={activeItem === "paymentHistory"}
+                                onclick={()=> this.handleItemclick("paymentHistory")}
+                            />
+                        </menu>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
         )
     }
 }
